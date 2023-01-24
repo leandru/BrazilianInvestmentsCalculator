@@ -1,6 +1,7 @@
 using InvestmentCalculator.API.Configuration;
 using InvestmentCalculator.API.Services;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,9 @@ builder.Configuration
     .AddJsonFile("appsettings.json", true, true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
     .AddEnvironmentVariables();
+
+CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");
+CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("pt-BR");
 
 builder.Services.AddControllers();
 
