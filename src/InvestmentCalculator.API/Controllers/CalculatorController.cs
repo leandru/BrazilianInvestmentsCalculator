@@ -33,5 +33,10 @@ namespace InvestmentCalculator.API.Controllers
 
             return result;
         }
+
+        public async Task<IEnumerable<CdiDay>> GetHistoricalSeries()
+        {
+            return await _cdiConsultationService.GetHistoricalSeries();
+        }
     }
 }

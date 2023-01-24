@@ -2,6 +2,7 @@
 using InvestmentCalculator.API.Models;
 using Microsoft.Extensions.Options;
 using System.Data;
+using System.Globalization;
 using System.Text.Json;
 
 namespace InvestmentCalculator.API.Services
@@ -18,16 +19,23 @@ namespace InvestmentCalculator.API.Services
             _options = options.Value;
         }
 
-        public async Task<IEnumerable<CdiDay>> GetHistoricalSeries(DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<CdiDay>> GetHistoricalSeries()
         {
             if (_cdiHistoricalSeries is null)
             {
                 var response = await GetHistoricalSeriesResponse(_options.HistoralCdiIndexFeeUrl);
-                _cdiHistoricalSeries = JsonSerializer.Deserialize<IEnumerable<CdiDay>>(response);
+                _cdiHistoricalSeries = JsonSerializer.Deserialize<IEnumerable<CdiDay>>(response);                
             }
 
-            var result = _cdiHistoricalSeries.Where(x => DateTime.Parse(string.Format(x.Date, "yyyy-MM-dd")) >= startDate &&
-                                                        DateTime.Parse(string.Format(x.Date, "yyyy-MM-dd")) <= endDate).ToList();
+            return _cdiHistoricalSeries;
+        }
+
+        public async Task<IEnumerable<CdiDay>> GetHistoricalSeries(DateTime startDate, DateTime endDate)
+        {
+            var cdiHistoricalSeries = await GetHistoricalSeries();
+            var result = _cdiHistoricalSeries.Where(x => DateTime.Parse(string.Format(x.Date, "yyyy-MM-dd"), CultureInfo.InvariantCulture) >= startDate &&
+                                                        DateTime.Parse(string.Format(x.Date, "yyyy-MM-dd"), CultureInfo.InvariantCulture) <= endDate).ToList();
+
             if (result is null)
             {
                 return Array.Empty<CdiDay>();
