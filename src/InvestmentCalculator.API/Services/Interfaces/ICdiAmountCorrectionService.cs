@@ -1,6 +1,6 @@
-﻿using InvestmentCalculator.src.Models;
+﻿using InvestmentCalculator.API.Models;
 
-namespace InvestmentCalculator.src.Services.Interfaces
+namespace InvestmentCalculator.API.Services.Interfaces
 {
     public interface ICdiAmountCorrectionService
     {

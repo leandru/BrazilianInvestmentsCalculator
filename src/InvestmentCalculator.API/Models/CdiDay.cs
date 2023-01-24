@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace InvestmentCalculator.src.Models
+namespace InvestmentCalculator.API.Models
 {
     public class CdiDay
     {

@@ -1,15 +1,10 @@
-﻿using InvestmentCalculator.API.src.Configuration;
-using InvestmentCalculator.src.Models;
+﻿using InvestmentCalculator.API.Configuration;
+using InvestmentCalculator.API.Models;
 using Microsoft.Extensions.Options;
 using System.Data;
-using System.IO.Compression;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Text.Json;
 
-namespace InvestmentCalculator.API.src.Services
+namespace InvestmentCalculator.API.Services
 {
     public class CdiConsultationService
     {

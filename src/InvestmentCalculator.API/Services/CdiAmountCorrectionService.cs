@@ -1,8 +1,8 @@
-﻿using InvestmentCalculator.src.Models;
-using InvestmentCalculator.src.Services.Interfaces;
+﻿using InvestmentCalculator.API.Models;
+using InvestmentCalculator.API.Services.Interfaces;
 using System.Globalization;
 
-namespace InvestmentCalculator.src.Services
+namespace InvestmentCalculator.API.Services
 {
     public sealed class CdiAmountCorrectionService //: ICdiAmountCorrectionService
     {

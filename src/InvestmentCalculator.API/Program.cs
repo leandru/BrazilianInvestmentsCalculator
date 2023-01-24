@@ -1,24 +1,16 @@
-using InvestmentCalculator.API.src.Configuration;
-using InvestmentCalculator.API.src.Services;
-using InvestmentCalculator.src.Services;
-using Microsoft.AspNetCore.Mvc;
+using InvestmentCalculator.API.Configuration;
+using InvestmentCalculator.API.Services;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Text.RegularExpressions;
-using static InvestmentCalculator.API.src.Configuration.SwaggerConfig;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration
-    .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "src"))
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", true, true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
+    .AddEnvironmentVariables();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-//builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpClient();
 builder.Services.Configure<ExternalEndpointsOptions>(

@@ -5,7 +5,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text.Json;
 
-namespace InvestmentCalculator.API.src.Configuration
+namespace InvestmentCalculator.API.Configuration
 {
     public static class SwaggerConfig
     {

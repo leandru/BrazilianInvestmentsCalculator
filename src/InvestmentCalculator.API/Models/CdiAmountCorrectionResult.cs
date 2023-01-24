@@ -1,4 +1,4 @@
-﻿namespace InvestmentCalculator.src.Models
+﻿namespace InvestmentCalculator.API.Models
 {
     public class CdiAmountCorrectionResult
     {

@@ -1,11 +1,8 @@
-using InvestmentCalculator.API.src.Services;
-using InvestmentCalculator.src.Models;
-using InvestmentCalculator.src.Services;
-using InvestmentCalculator.src.Services.Interfaces;
+using InvestmentCalculator.API.Services;
+using InvestmentCalculator.API.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
 
-namespace InvestmentCalculator.src.Controllers
+namespace InvestmentCalculator.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
