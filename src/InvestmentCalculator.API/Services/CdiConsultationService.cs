@@ -33,8 +33,8 @@ namespace InvestmentCalculator.API.Services
         public async Task<IEnumerable<CdiDay>> GetHistoricalSeries(DateTime startDate, DateTime endDate)
         {
             var cdiHistoricalSeries = await GetHistoricalSeries();
-            var result = _cdiHistoricalSeries.Where(x => DateTime.Parse(string.Format(x.Date, "yyyy-MM-dd"), CultureInfo.InvariantCulture) >= startDate &&
-                                                        DateTime.Parse(string.Format(x.Date, "yyyy-MM-dd"), CultureInfo.InvariantCulture) <= endDate).ToList();
+            var result = _cdiHistoricalSeries.Where(x => DateTime.Parse(string.Format(x.Date, "yyyy-MM-dd")) >= startDate &&
+                                                        DateTime.Parse(string.Format(x.Date, "yyyy-MM-dd")) <= endDate).ToList();
 
             if (result is null)
             {
