@@ -25,6 +25,7 @@ builder.Services.AddSwaggerConfig();
 builder.Services.AddSingleton<CdiConsultationService>();
 builder.Services.AddScoped<CdiAmountCorrectionService>();
 
+builder.Services.AddFluentValidation();
 
 
 var app = builder.Build();
