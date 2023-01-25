@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using InvestmentCalculator.API.Models;
-using InvestmentCalculator.API.Models.Validations;
-using System;
+using InvestmentCalculator.Business.Models;
+using InvestmentCalculator.Business.Models.Validations;
+using InvestmentCalculator.API.ViewModels;
 
 namespace InvestmentCalculator.API.Configuration
 {
@@ -10,8 +10,8 @@ namespace InvestmentCalculator.API.Configuration
     {
         public static IServiceCollection AddFluentValidation(this IServiceCollection services)
         {
-            services.AddValidatorsFromAssemblyContaining<CdiInputParametersValidator>();
-            services.AddScoped<IValidator<CdiInputParameters>, CdiInputParametersValidator>();
+            services.AddValidatorsFromAssemblyContaining<LciInputParametersValidator>();
+            services.AddScoped<IValidator<LciInputParameters>, LciInputParametersValidator>();
 
             return services;
         }

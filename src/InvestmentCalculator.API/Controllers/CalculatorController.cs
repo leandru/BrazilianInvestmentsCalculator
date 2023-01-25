@@ -1,9 +1,11 @@
-using InvestmentCalculator.API.Services;
-using InvestmentCalculator.API.Models;
+using InvestmentCalculator.Business.Services;
+using InvestmentCalculator.Business.Models;
 using Microsoft.AspNetCore.Mvc;
 using FluentValidation;
 using FluentValidation.Results;
 using InvestmentCalculator.API.Configuration;
+using InvestmentCalculator.API.ViewModels;
+using InvestmentCalculator.Business.Interfaces;
 
 namespace InvestmentCalculator.API.Controllers
 {
@@ -13,14 +15,14 @@ namespace InvestmentCalculator.API.Controllers
     {
         private readonly ILogger<InvestmentCalculatorController> _logger;
 
-        private readonly CdiConsultationService _cdiConsultationService;
-        private readonly CdiAmountCorrectionService _cdiAmountCorrectionService;
-        private IValidator<CdiInputParameters> _validator;
+        private readonly IConsultationService _cdiConsultationService;
+        private readonly ICalculationService _cdiAmountCorrectionService;
+        private IValidator<LciInputParameters> _validator;
 
         public InvestmentCalculatorController(ILogger<InvestmentCalculatorController> logger,
-               CdiAmountCorrectionService cdiAmountCorrectionService,
-               CdiConsultationService cdiConsultationService,
-               IValidator<CdiInputParameters> validator)
+               ICalculationService cdiAmountCorrectionService,
+               IConsultationService cdiConsultationService,
+               IValidator<LciInputParameters> validator)
         {
             _logger = logger;
             _cdiConsultationService = cdiConsultationService;
@@ -35,7 +37,7 @@ namespace InvestmentCalculator.API.Controllers
                                                                 double cdiPercentage)
         {
             #region Validations
-            var cdiInputParameters = new CdiInputParameters ( startDate, endDate, investmentAmount, cdiPercentage );
+            var cdiInputParameters = new LciInputParameters ( startDate, endDate, investmentAmount, cdiPercentage );
             var resultValidation = await ValidateParameters(cdiInputParameters);
 
             if(resultValidation.HasErrors)
@@ -48,8 +50,8 @@ namespace InvestmentCalculator.API.Controllers
             }
             #endregion
 
-            var historicalSeriesRange = await _cdiConsultationService.GetHistoricalSeries(startDate, endDate);
-            var result = _cdiAmountCorrectionService.CalculateCDICorrection(historicalSeriesRange, investmentAmount, cdiPercentage);
+            var historicalSeriesRange = await _cdiConsultationService.GetCDIHistoricalSeries(startDate, endDate);
+            var result = await _cdiAmountCorrectionService.CalculateCDICorrection(historicalSeriesRange, investmentAmount, cdiPercentage);
 
             return Ok(new
             {
@@ -58,22 +60,18 @@ namespace InvestmentCalculator.API.Controllers
             });
         }
 
-        [HttpGet("GetHistoricalSeries")]
-        public async Task<IEnumerable<CdiDay>> GetHistoricalSeries()
+
+        [HttpGet("CalculateCompoundInterest")]
+        public async Task<double> CalculateCompoundInterest(double principal, double annualRate, int time)
         {
-            return await _cdiConsultationService.GetHistoricalSeries();
+            return await _cdiAmountCorrectionService.CalculateCompoundInterest( principal, annualRate, time);
         }
 
-        private async Task<(bool HasErrors, List<MessageResult>? Errors)> ValidateParameters(CdiInputParameters cdiInputParameters)
+        private async Task<(bool HasErrors, List<MessageResult>? Errors)> ValidateParameters(LciInputParameters cdiInputParameters)
         {
             ValidationResult result = await _validator.ValidateAsync(cdiInputParameters);
 
             return (result.Errors.Any(),result.GetErrors());
-        }
-
-        private bool IsGreaterThanToday(DateTime date)
-        {
-            return date > DateTime.Today;
         }
 
     }

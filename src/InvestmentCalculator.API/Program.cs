@@ -1,5 +1,7 @@
 using InvestmentCalculator.API.Configuration;
-using InvestmentCalculator.API.Services;
+using InvestmentCalculator.Business.Interfaces;
+using InvestmentCalculator.Business.Models;
+using InvestmentCalculator.Business.Services;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using System.Globalization;
 
@@ -14,25 +16,23 @@ builder.Configuration
 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");
 CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("pt-BR");
 
+builder.Services.Configure<ExternalEndpoints>(builder.Configuration.GetSection("ExternalEndpointsOptions"));
+
 builder.Services.AddControllers();
 
 builder.Services.AddHttpClient();
-builder.Services.Configure<ExternalEndpointsOptions>(
-    builder.Configuration.GetSection("ExternalEndpointsOptions"));
 
 builder.Services.AddSwaggerConfig();
 
-builder.Services.AddSingleton<CdiConsultationService>();
-builder.Services.AddScoped<CdiAmountCorrectionService>();
+builder.Services.AddSingleton<IConsultationService, ConsultationService>();
+builder.Services.AddScoped<ICalculationService, CalculationService>();
 
 builder.Services.AddFluentValidation();
-
 
 var app = builder.Build();
 
 var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 app.UseSwaggerConfig(apiVersionDescriptionProvider);
-
 
 app.UseHttpsRedirection();
 
