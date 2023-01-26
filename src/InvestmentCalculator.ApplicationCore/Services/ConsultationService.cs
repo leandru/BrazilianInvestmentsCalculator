@@ -29,7 +29,7 @@ namespace InvestmentCalculator.Business.Services
                 
                 data = cdiHistoricalSeries ?? Enumerable.Empty<CdiDay>();
 
-                _cdiHistoricalSeriesCache.Set("CDIHistoricalSeriesData", data, TimeSpan.FromMinutes(5));
+                _cdiHistoricalSeriesCache.Set("CDIHistoricalSeriesData", data, TimeSpan.FromHours(12));
             }
 
             return data;
