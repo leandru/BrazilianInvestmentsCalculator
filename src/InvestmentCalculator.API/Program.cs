@@ -3,6 +3,7 @@ using InvestmentCalculator.Business.Interfaces;
 using InvestmentCalculator.Business.Models;
 using InvestmentCalculator.Business.Services;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Extensions.Caching.Memory;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +25,8 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddSwaggerConfig();
 
-builder.Services.AddSingleton<IConsultationService, ConsultationService>();
+builder.Services.AddSingleton<IMemoryCache, MemoryCache>();
+builder.Services.AddScoped<IConsultationService, ConsultationService>();
 builder.Services.AddScoped<ICalculationService, CalculationService>();
 
 builder.Services.AddFluentValidation();

@@ -33,11 +33,11 @@ namespace InvestmentCalculator.API.Controllers
         [HttpGet("CalculateLCI")]
         public async Task<IActionResult> CalculateLCI(DateTime startDate,
                                                                 DateTime endDate,
-                                                                double investmentAmount,
+                                                                double principalAmount,
                                                                 double cdiPercentage)
         {
             #region Validations
-            var cdiInputParameters = new LciInputParameters ( startDate, endDate, investmentAmount, cdiPercentage );
+            var cdiInputParameters = new LciInputParameters ( startDate, endDate, principalAmount, cdiPercentage );
             var resultValidation = await ValidateParameters(cdiInputParameters);
 
             if(resultValidation.HasErrors)
@@ -51,7 +51,7 @@ namespace InvestmentCalculator.API.Controllers
             #endregion
 
             var historicalSeriesRange = await _cdiConsultationService.GetCDIHistoricalSeries(startDate, endDate);
-            var result = await _cdiAmountCorrectionService.CalculateCDICorrection(historicalSeriesRange, investmentAmount, cdiPercentage);
+            var result = _cdiAmountCorrectionService.CalculateCDICorrection(historicalSeriesRange, principalAmount, cdiPercentage);
 
             return Ok(new
             {
@@ -62,9 +62,9 @@ namespace InvestmentCalculator.API.Controllers
 
 
         [HttpGet("CalculateCompoundInterest")]
-        public async Task<double> CalculateCompoundInterest(double principal, double annualRate, int time)
+        public double CalculateCompoundInterest(double principalAmount, double annualRate, int months)
         {
-            return await _cdiAmountCorrectionService.CalculateCompoundInterest( principal, annualRate, time);
+            return _cdiAmountCorrectionService.CalculateCompoundInterest(principalAmount, annualRate, months);
         }
 
         private async Task<(bool HasErrors, List<MessageResult>? Errors)> ValidateParameters(LciInputParameters cdiInputParameters)

@@ -3,6 +3,7 @@ using InvestmentCalculator.Business.Interfaces;
 using Microsoft.Extensions.Options;
 using System.Data;
 using System.Text.Json;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace InvestmentCalculator.Business.Services
 {
@@ -10,37 +11,37 @@ namespace InvestmentCalculator.Business.Services
     {
         private readonly HttpClient _httpClient;
         private readonly ExternalEndpoints _externalEndPoints;
-        private IEnumerable<CdiDay>? _cdiHistoricalSeries;
+        private readonly IMemoryCache _cdiHistoricalSeriesCache;
 
-        public ConsultationService(HttpClient httpClient, IOptions<ExternalEndpoints> externalEndPoints)
+        public ConsultationService(HttpClient httpClient, IOptions<ExternalEndpoints> externalEndPoints, IMemoryCache cache)
         {
             _httpClient = httpClient;
             _externalEndPoints = externalEndPoints.Value;
+            _cdiHistoricalSeriesCache = cache;
         }
 
         public async Task<IEnumerable<CdiDay>> GetCDIHistoricalSeries()
         {
-            if (_cdiHistoricalSeries is null)
+            if (!_cdiHistoricalSeriesCache.TryGetValue("CDIHistoricalSeriesData", out IEnumerable<CdiDay> data))
             {
                 var response = await GetHistoricalSeriesResponse(_externalEndPoints.HistoralCdiIndexFeeUrl);
-                _cdiHistoricalSeries = JsonSerializer.Deserialize<IEnumerable<CdiDay>>(response);                
+                var cdiHistoricalSeries = JsonSerializer.Deserialize<IEnumerable<CdiDay>>(response);
+                
+                data = cdiHistoricalSeries ?? Enumerable.Empty<CdiDay>();
+
+                _cdiHistoricalSeriesCache.Set("CDIHistoricalSeriesData", data, TimeSpan.FromMinutes(5));
             }
 
-            return _cdiHistoricalSeries;
+            return data;
         }
 
         public async Task<IEnumerable<CdiDay>> GetCDIHistoricalSeries(DateTime startDate, DateTime endDate)
         {
             var cdiHistoricalSeries = await GetCDIHistoricalSeries();
-            var result = _cdiHistoricalSeries.Where(x => DateTime.Parse(string.Format(x.Date, "yyyy-MM-dd")) >= startDate &&
-                                                         DateTime.Parse(string.Format(x.Date, "yyyy-MM-dd")) <= endDate).ToList();
+            var result = cdiHistoricalSeries.Where(x => DateTime.Parse(string.Format(x?.Date ?? string.Empty, "yyyy-MM-dd")) >= startDate &&
+                                                         DateTime.Parse(string.Format(x?.Date ?? string.Empty, "yyyy-MM-dd")) <= endDate).ToList();
 
-            if (result is null)
-            {
-                return Array.Empty<CdiDay>();
-            }
-
-            return result;
+            return result ?? Enumerable.Empty<CdiDay>();
         }
 
 
