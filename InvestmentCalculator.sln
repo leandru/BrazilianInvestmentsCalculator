@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvestmentCalculator.API", "src\InvestmentCalculator.API\InvestmentCalculator.API.csproj", "{8D901DDC-D123-49D1-9B34-37A0484F8644}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvestmentCalculator.ApplicationCore", "src\InvestmentCalculator.Business\InvestmentCalculator.ApplicationCore.csproj", "{B75EE83E-E0C5-4321-9735-A8AB8C68BE93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvestmentCalculator.ApplicationCore", "src\InvestmentCalculator.ApplicationCore\InvestmentCalculator.ApplicationCore.csproj", "{B75EE83E-E0C5-4321-9735-A8AB8C68BE93}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvestmentCalculator.Tests", "tests\InvestmentCalculator.Tests\InvestmentCalculator.Tests.csproj", "{5A45F3E7-94BF-4447-BF6E-DCB1B8E3C67A}"
 	ProjectSection(ProjectDependencies) = postProject
