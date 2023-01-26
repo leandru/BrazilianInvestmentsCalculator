@@ -6,7 +6,7 @@ namespace InvestmentCalculator.Business.Services
 {
     public sealed class CalculationService: ICalculationService
     {
-        public async Task<CdiAmountCorrectionResult> CalculateCDICorrection(IEnumerable<CdiDay> cdiDays, double value, double cdiPercentage)
+        public CdiAmountCorrectionResult CalculateCDICorrection(IEnumerable<CdiDay> cdiDays, double value, double cdiPercentage)
         {
             var totalIndexFee = Math.Round(CalculateAccumulatedDI(cdiDays, cdiPercentage), 8);
             var totalIndexFeePercentage = Math.Round(GetDIPercentage(totalIndexFee), 8);
@@ -21,7 +21,7 @@ namespace InvestmentCalculator.Business.Services
             };
         }
 
-        public async Task<double> CalculateCompoundInterest(double principal, double annualRate, int months)
+        public double CalculateCompoundInterest(double principal, double annualRate, int months)
         {
             var annualCompound = 1;
             var monthFracion = (double)months / 12;
@@ -43,7 +43,8 @@ namespace InvestmentCalculator.Business.Services
         }
         private double CalculateAccumulatedDI( CdiDay cdiDay, double cdiPercentage = 100 )
         {
-            return 1 + (Double.Parse(cdiDay.Value, CultureInfo.InvariantCulture.NumberFormat)/100 * cdiPercentage / 100);
+
+            return 1 + (Double.Parse(cdiDay?.Value ?? "0", CultureInfo.InvariantCulture.NumberFormat)/100 * cdiPercentage / 100);
         }
 
         private double GetDIPercentage( double totalFee )
