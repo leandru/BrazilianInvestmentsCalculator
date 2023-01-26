@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InvestmentCalculator.Business\InvestmentCalculator.ApplicationCore.csproj" />
+    <ProjectReference Include="..\InvestmentCalculator.ApplicationCore\InvestmentCalculator.ApplicationCore.csproj" />
   </ItemGroup>
 
 </Project>

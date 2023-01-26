@@ -1,9 +1,5 @@
-using InvestmentCalculator.Business.Interfaces;
 using InvestmentCalculator.Business.Models;
 using InvestmentCalculator.Business.Services;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using Xunit;
 
 namespace InvestmentCalculator.Tests
 {

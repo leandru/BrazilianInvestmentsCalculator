@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\InvestmentCalculator.Business\InvestmentCalculator.ApplicationCore.csproj" />
+    <ProjectReference Include="..\..\src\InvestmentCalculator.ApplicationCore\InvestmentCalculator.ApplicationCore.csproj" />
   </ItemGroup>
 
 </Project>
