@@ -2,7 +2,7 @@
 
 namespace InvestmentCalculator.Business.Models
 {
-    public class CdiDay
+    public record CdiDay
     {
         [JsonPropertyName("data")]
         public string? Date  { get; set; }

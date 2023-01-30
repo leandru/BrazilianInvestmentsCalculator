@@ -9,27 +9,25 @@ namespace InvestmentCalculator.Business.Services
 {
     public class ConsultationService: IConsultationService
     {
-        private readonly HttpClient _httpClient;
-        private readonly ExternalEndpoints _externalEndPoints;
-        private readonly IMemoryCache _cdiHistoricalSeriesCache;
+        private readonly HttpClient _cdiHistoricalHttpClient;
+        private readonly IMemoryCache _memoryCache;
 
-        public ConsultationService(HttpClient httpClient, IOptions<ExternalEndpoints> externalEndPoints, IMemoryCache cache)
+        public ConsultationService(IHttpClientFactory httpClientFactory, IMemoryCache memoryCache)
         {
-            _httpClient = httpClient;
-            _externalEndPoints = externalEndPoints.Value;
-            _cdiHistoricalSeriesCache = cache;
+            _cdiHistoricalHttpClient = httpClientFactory.CreateClient("CdiHistoricalAPI");
+            _memoryCache = memoryCache;
         }
 
         public async Task<IEnumerable<CdiDay>> GetCDIHistoricalSeries()
         {
-            if (!_cdiHistoricalSeriesCache.TryGetValue("CDIHistoricalSeriesData", out IEnumerable<CdiDay> data))
+            if (!_memoryCache.TryGetValue("CDIHistoricalSeriesData", out IEnumerable<CdiDay> data))
             {
-                var response = await GetHistoricalSeriesResponse(_externalEndPoints.HistoralCdiIndexFeeUrl);
+                var response = await GetHistoricalSeriesResponse();
                 var cdiHistoricalSeries = JsonSerializer.Deserialize<IEnumerable<CdiDay>>(response);
                 
                 data = cdiHistoricalSeries ?? Enumerable.Empty<CdiDay>();
 
-                _cdiHistoricalSeriesCache.Set("CDIHistoricalSeriesData", data, TimeSpan.FromHours(12));
+                _memoryCache.Set("CDIHistoricalSeriesData", data, TimeSpan.FromHours(12));
             }
 
             return data;
@@ -47,16 +45,16 @@ namespace InvestmentCalculator.Business.Services
 
         /* The UrlBacenEndPoint (https://api.bcb.gov.br/dados/serie/bcdata.sgs.12/dados?formato=json) has a compressed return
          * I've tried using native HttpHandler with mode=Descompress.All but it hasn't worked yet. */
-        private async Task<string> GetHistoricalSeriesResponse(string url)
+        private async Task<string> GetHistoricalSeriesResponse()
         {
-            using (var request = new HttpRequestMessage(HttpMethod.Get, new Uri(url)))
+            using (var request = new HttpRequestMessage(HttpMethod.Get, _cdiHistoricalHttpClient.BaseAddress))
             {
                 request.Headers.TryAddWithoutValidation("Accept", "text/html,application/xhtml+xml,application/xml");
                 request.Headers.TryAddWithoutValidation("Accept-Encoding", "gzip, deflate, br");
                 request.Headers.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:19.0) Gecko/20100101 Firefox/19.0");
                 request.Headers.TryAddWithoutValidation("Accept-Charset", "utf-8");
 
-                using (var response = await _httpClient.SendAsync(request).ConfigureAwait(false))
+                using (var response = await _cdiHistoricalHttpClient.SendAsync(request).ConfigureAwait(false))
                 {
                     response.EnsureSuccessStatusCode();
                     return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
