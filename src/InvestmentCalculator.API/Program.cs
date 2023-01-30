@@ -3,6 +3,8 @@ using InvestmentCalculator.Business.Interfaces;
 using InvestmentCalculator.Business.Models;
 using InvestmentCalculator.Business.Services;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,11 +22,15 @@ builder.Services.Configure<ExternalEndpoints>(builder.Configuration.GetSection("
 
 builder.Services.AddControllers();
 
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("CdiHistoricalAPI", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration.GetSection("ExternalEndpointsOptions")["HistoralCdiIndexFeeUrl"]);
+});
 
 builder.Services.AddSwaggerConfig();
 
-builder.Services.AddSingleton<IConsultationService, ConsultationService>();
+builder.Services.AddSingleton<IMemoryCache, MemoryCache>();
+builder.Services.AddScoped<IConsultationService, ConsultationService>();
 builder.Services.AddScoped<ICalculationService, CalculationService>();
 
 builder.Services.AddFluentValidation();
