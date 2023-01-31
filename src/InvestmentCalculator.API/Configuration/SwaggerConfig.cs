@@ -11,24 +11,6 @@ namespace InvestmentCalculator.API.Configuration
     {
         public static IServiceCollection AddSwaggerConfig(this IServiceCollection services)
         {
-            services.AddApiVersioning(options =>
-            {
-                options.AssumeDefaultVersionWhenUnspecified = true;
-                options.DefaultApiVersion = new ApiVersion(1, 0);
-                options.ReportApiVersions = true;
-            });
-
-            services.AddVersionedApiExplorer(options =>
-            {
-                options.GroupNameFormat = "'v'VVV";
-                options.SubstituteApiVersionInUrl = true;
-            });
-
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-
-            });
             services.AddSwaggerGen(c =>
             {
                 c.OperationFilter<SwaggerDefaultValues>();
@@ -74,6 +56,7 @@ namespace InvestmentCalculator.API.Configuration
                                         Calculation Methodology: <a target='_blank' href='https://www.b3.com.br/pt_br/market-data-e-indices/indices/indices-de-segmentos-e-setoriais/di/metodologia-de-calcudo-acumulado-de-di/'> B3 Methodology </a><br/>
                                         Based on: <a target='_blank' href='https://www3.bcb.gov.br/CALCIDADAO/publico/exibirFormCorrecaoValores.do?method=exibirFormCorrecaoValores&aba=5'> BACEN DI Calculator </a><br/>
                                         Data retrieved from: <a target='_blank' href='https://api.bcb.gov.br/dados/serie/bcdata.sgs.12/dados?formato=json'> Bacen DI Data </a> <br/>";
+                
                 var info = new OpenApiInfo()
                 {
                     Title = "Brazilian Investment Calculator",
