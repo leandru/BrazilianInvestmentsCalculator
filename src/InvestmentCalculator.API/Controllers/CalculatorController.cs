@@ -6,20 +6,21 @@ using FluentValidation.Results;
 using InvestmentCalculator.API.Configuration;
 using InvestmentCalculator.API.ViewModels;
 using InvestmentCalculator.Business.Interfaces;
+using FluentValidation.Validators;
 
 namespace InvestmentCalculator.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class InvestmentCalculatorController : ControllerBase
+    public class CalculatorController : ControllerBase
     {
-        private readonly ILogger<InvestmentCalculatorController> _logger;
+        private readonly ILogger<CalculatorController> _logger;
 
         private readonly IConsultationService _cdiConsultationService;
         private readonly ICalculationService _cdiAmountCorrectionService;
         private IValidator<LciInputParameters> _validator;
 
-        public InvestmentCalculatorController(ILogger<InvestmentCalculatorController> logger,
+        public CalculatorController(ILogger<CalculatorController> logger,
                ICalculationService cdiAmountCorrectionService,
                IConsultationService cdiConsultationService,
                IValidator<LciInputParameters> validator)
@@ -65,6 +66,12 @@ namespace InvestmentCalculator.API.Controllers
         public double CalculateCompoundInterest(double principalAmount, double annualRate, int months)
         {
             return _cdiAmountCorrectionService.CalculateCompoundInterest(principalAmount, annualRate, months);
+        }
+
+        [HttpGet("Setup")]
+        public string Setup()
+        {
+            return "Setup";
         }
 
         private async Task<(bool HasErrors, List<MessageResult>? Errors)> ValidateParameters(LciInputParameters cdiInputParameters)
