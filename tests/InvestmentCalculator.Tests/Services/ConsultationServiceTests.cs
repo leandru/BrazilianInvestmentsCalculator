@@ -1,16 +1,7 @@
-﻿using InvestmentCalculator.Business.Models;
-using InvestmentCalculator.Business.Services;
-using InvestmentCalculator.Tests.Utils;
+﻿using InvestmentCalculator.Business.Services;
+using InvestmentCalculator.Tests.Mocks;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.VisualBasic;
 using Moq;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
 
 namespace InvestmentCalculator.Tests.Units
 {
@@ -38,7 +29,7 @@ namespace InvestmentCalculator.Tests.Units
             var consultationService = new ConsultationService(_httpClientFactoryMock.Object, _memoryCacheMock.Object);
 
             var result = await consultationService.GetCDIHistoricalSeries();
-            var knownResults = MockedValues.GetCdiDaysList();
+            var knownResults = CdiDayMock.GetListOfThreeDays();
             Assert.NotNull(result);
 
             bool hasMatch = result

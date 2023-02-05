@@ -6,14 +6,14 @@ namespace InvestmentCalculator.Business.Services
 {
     public sealed class CalculationService: ICalculationService
     {
-        public CdiAmountCorrectionResult CalculateCDICorrection(IEnumerable<CdiDay> cdiDays, double value, double cdiPercentage)
+        public AmountCorrectionResult CalculateCDICorrection(IEnumerable<CdiDay> cdiDays, double value, double cdiPercentage)
         {
             var totalIndexFee = Math.Round(CalculateAccumulatedDI(cdiDays, cdiPercentage), 8);
             var totalIndexFeePercentage = Math.Round(GetDIPercentage(totalIndexFee), 8);
 
             var correctedValue = Math.Round(value * totalIndexFee, 2);
 
-            return new CdiAmountCorrectionResult
+            return new AmountCorrectionResult
             {
                 CorrectedAmount = correctedValue,
                 CorrectionIndexFee = totalIndexFee,
