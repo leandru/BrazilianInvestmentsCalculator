@@ -8,15 +8,15 @@ ENV ASPNETCORE_URLS=http://*:5000
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["./InvestmentCalculator.API/InvestmentCalculator.API.csproj", "InvestmentCalculator.API/"]
-COPY ["./InvestmentCalculator.ApplicationCore/InvestmentCalculator.ApplicationCore.csproj", "InvestmentCalculator.ApplicationCore/"]
+COPY ["./src/InvestmentCalculator.API/InvestmentCalculator.API.csproj", "/InvestmentCalculator.API/"]
+COPY ["./src/InvestmentCalculator.ApplicationCore/InvestmentCalculator.ApplicationCore.csproj", "/InvestmentCalculator.ApplicationCore/"]
 
-RUN dotnet restore "./InvestmentCalculator.API/InvestmentCalculator.API.csproj"
+RUN dotnet restore "/InvestmentCalculator.API/InvestmentCalculator.API.csproj"
 COPY . .
-RUN dotnet build "./InvestmentCalculator.API/InvestmentCalculator.API.csproj" -c Release -o /app/build
+RUN dotnet build "./src/InvestmentCalculator.API/InvestmentCalculator.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "./InvestmentCalculator.API/InvestmentCalculator.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./src/InvestmentCalculator.API/InvestmentCalculator.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
