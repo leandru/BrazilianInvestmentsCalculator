@@ -15,5 +15,6 @@ docker run -d --name brinvestmentscalc-api -p 5000:5000 brinvestmentscalc-api
 
 <h4>Running Tests</h4>
 docker build --target testrunner -t brinvestmentscalc-tests .
+<br/>
 docker run brinvestmentscalc-tests
 
